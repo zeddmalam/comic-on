@@ -26,27 +26,28 @@ const LightTooltip = styled(({ className, ...props }) => (
 }));
 
 const pos2placement = {
-	'top-start': 'right-start',
+	'top-left': 'right-start',
 	'top': 'bottom',
-	'top-end': 'bottom',
+	'top-right': 'bottom',
 	'left': 'right',
 	'center': 'top',
 	'right': 'left',
-	'bottom-start': 'top',
+	'bottom-left': 'top',
 	'bottom': 'top',
-	'bottom-end': 'left-start',
+	'bottom-right': 'left-start',
 };
 
 function Item({ paper, position, visibleMessages }) {
 	return (<>
-		{paper.objects.filter(o => o.position === position).map((o, oIndex) => (<LightTooltip
-			title={(<Badge badgeContent={o.message.order || 0} color="primary"><br />{o.message.text}</Badge>)}
-			arrow
-			open={visibleMessages >= (o.message.order || 0)}
-			placement={o.message.textPlacement || pos2placement[position]}
-			key={`object-${oIndex}`}>
-			<img height={128} src={`/img/comics/${o.type}.png`} alt={o.type} />
-		</LightTooltip>))}
+		{paper.objects.filter(o => o.position === position).map((o, oIndex) => o.message ? (<LightTooltip
+				title={(<Badge badgeContent={o.message.order || 0} color="primary"><br />{o.message.text}</Badge>)}
+				arrow={!!o.img}
+				open={visibleMessages >= (o.message.order || 0)}
+				placement={o.message.textPlacement || pos2placement[position]}
+				key={`object-${oIndex}`}>
+				{o.img ? (<img height={128} src={o.img} alt="" />) : <span>&nbsp;</span>}
+			</LightTooltip>) : (<img height={128} src={o.img} alt="" key={`object-${oIndex}`}/>)
+		)}
 	</>);
 }
 
@@ -54,7 +55,7 @@ export default function Comics({ papers, delay = 500 }) {
 	const [visibleMessages, setVisibleMessages] = useState(0);
 
 	useEffect(() => {
-		const count = papers.reduce((accu, p) => Math.max(accu, ...p.objects.map(o => o.message.order)), 0);
+		const count = papers.reduce((accu, p) => Math.max(accu, ...p.objects.map(o => (o.message || {order:0}).order)), 0);
 		if (visibleMessages >= count) {
 			return;
 		}
@@ -64,46 +65,53 @@ export default function Comics({ papers, delay = 500 }) {
 		return () => clearInterval(interval);
 	}, [visibleMessages, papers, delay]);
 
-	return (<Grid container spacing={2} style={{ maxWidth: `${128 * 6 + 16}px`, backgroundColor: '#ffffff', padding:'16px' }}>
-		{papers.map((paper, index) => (
-			<Grid item xs={12} md={6} key={`card-${index}`}><Card component={Paper} elevation={8} style={{
+	return (<Grid container spacing={2} style={{ backgroundColor: '#ffffff', padding:'16px' }}>
+		{papers.map((paper, index) => {
+			const leftWidth = '128px';//paper.objects.filter(o => ['top-left', 'left', 'bottom-left'].includes(o.position)).length ? '128px' : null;
+			const centerWidth = paper.objects.filter(o => ['top', 'center', 'bottom'].includes(o.position)).length ? '128px' : null;
+			const rightWidth = paper.objects.filter(o => ['top-right', 'right', 'bottom-right'].includes(o.position)).length ? '128px' : null;
+			
+			const topHeight = '128px';//paper.objects.filter(o => ['top-left', 'top', 'top-right'].includes(o.position)).length ? '128px' : null;
+			const centerHeight = paper.objects.filter(o => ['left', 'center', 'right'].includes(o.position)).length ? '128px' : null;
+			const bottomHeight = paper.objects.filter(o => ['bottom-left', 'bottom', 'bottom-right'].includes(o.position)).length ? '128px' : null;
+			return (<Grid item xs={12} md={6} key={`card-${index}`}><Card component={Paper} elevation={8} style={{
 				backgroundSize: 'cover',
-				backgroundImage: 'url(/img/comics/bg-01.png)',
+				backgroundImage: `url(${paper.background})`,
 				backgroundRepeat: 'no-repeat',
 				backgroundPosition: 'center',
 			}}>
 				<CardContent>
 					{/*<Grid container>
-						<Grid item xs={4} align="left"><Item paper={paper} visibleMessages={visibleMessages} position="top-start"/></Grid>
+						<Grid item xs={4} align="left"><Item paper={paper} visibleMessages={visibleMessages} position="top-left"/></Grid>
 						<Grid item xs={4}><Item paper={paper} visibleMessages={visibleMessages} position="top"/></Grid>
-						<Grid item xs={4} align="right"><Item paper={paper} visibleMessages={visibleMessages} position="top-end"/></Grid>
+						<Grid item xs={4} align="right"><Item paper={paper} visibleMessages={visibleMessages} position="top-right"/></Grid>
 						<Grid item xs={4} align="left"><Item paper={paper} visibleMessages={visibleMessages} position="left"/></Grid>
 						<Grid item xs={4}><Item paper={paper} visibleMessages={visibleMessages} position="center"/></Grid>
 						<Grid item xs={4} align="right"><Item paper={paper} visibleMessages={visibleMessages} position="right"/></Grid>
-						<Grid item xs={4} align="left"><Item paper={paper} visibleMessages={visibleMessages} position="bottom-start"/></Grid>
+						<Grid item xs={4} align="left"><Item paper={paper} visibleMessages={visibleMessages} position="bottom-left"/></Grid>
 						<Grid item xs={4}><Item paper={paper} visibleMessages={visibleMessages} position="bottom"/></Grid>
-						<Grid item xs={4} align="right"><Item paper={paper} visibleMessages={visibleMessages} position="bottom-end"/></Grid>
+						<Grid item xs={4} align="right"><Item paper={paper} visibleMessages={visibleMessages} position="bottom-right"/></Grid>
 					</Grid>*/}
 					<table style={{ minWidth: '100%' }}>
 						<tbody>
 							<tr>
-								<td style={{ textAlign: 'left' }}><Item paper={paper} visibleMessages={visibleMessages} position="top-start" /></td>
-								<td><Item paper={paper} visibleMessages={visibleMessages} position="top" /></td>
-								<td style={{ textAlign: 'right' }}><Item paper={paper} visibleMessages={visibleMessages} position="top-end" /></td>
+								<td style={{ textAlign: 'left', verticalAlign:'center',   width: leftWidth,   height: topHeight}}><Item paper={paper} visibleMessages={visibleMessages} position="top-left" /></td>
+								<td style={{ textAlign: 'center', verticalAlign:'center', width: centerWidth, height: topHeight}}><Item paper={paper} visibleMessages={visibleMessages} position="top" /></td>
+								<td style={{ textAlign: 'right', verticalAlign:'center',  width: rightWidth,  height: topHeight}}><Item paper={paper} visibleMessages={visibleMessages} position="top-right" /></td>
 							</tr>
 							<tr>
-								<td style={{ textAlign: 'left' }}><Item paper={paper} visibleMessages={visibleMessages} position="left" /></td>
-								<td><Item paper={paper} visibleMessages={visibleMessages} position="center" /></td>
-								<td style={{ textAlign: 'right' }}><Item paper={paper} visibleMessages={visibleMessages} position="right" /></td>
+								<td style={{ textAlign: 'left', verticalAlign:'center',   width: leftWidth,   height: centerHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="left" /></td>
+								<td style={{ textAlign: 'center', verticalAlign:'center', width: centerWidth, height: centerHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="center" /></td>
+								<td style={{ textAlign: 'right', verticalAlign:'center',  width: rightWidth,  height: centerHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="right" /></td>
 							</tr>
 							<tr>
-								<td style={{ textAlign: 'left' }}><Item paper={paper} visibleMessages={visibleMessages} position="bottom-start" /></td>
-								<td><Item paper={paper} visibleMessages={visibleMessages} position="bottom" /></td>
-								<td style={{ textAlign: 'right' }}><Item paper={paper} visibleMessages={visibleMessages} position="bottom-end" /></td>
+								<td style={{ textAlign: 'left', verticalAlign:'center',   width: leftWidth,   height: bottomHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="bottom-left" /></td>
+								<td style={{ textAlign: 'center', verticalAlign:'center', width: centerWidth, height: bottomHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="bottom" /></td>
+								<td style={{ textAlign: 'right', verticalAlign:'center',  width: rightWidth,  height: bottomHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="bottom-right" /></td>
 							</tr>
 						</tbody>
 					</table>
-				</CardContent></Card></Grid>
-		))}
+				</CardContent></Card></Grid>);
+		})}
 	</Grid>);
 }

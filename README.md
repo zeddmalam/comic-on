@@ -1,70 +1,144 @@
-# Getting Started with Create React App
+*comics-on* module provides with a class which generates a comics. It's based on MUi.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Installation
 
-## Available Scripts
+```
+npm i comics-on --save
+```
 
-In the project directory, you can run:
+# Usage
 
-### `npm start`
+```
+import Comics from 'comics-on';
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+const amount = 1;
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+const papers = [
+		{
+			background: '/img/comics/map-bg.png',
+			objects: [
+				{
+					img: '/img/comics/protege.png',
+					position: 'center',
+					message: {
+						text: 'This is a big world. Would be nice to get some help here.',
+						textPlacement: 'left-start',
+						order: 1
+					}
+				},
+			]
+		},
+		{
+			background: '/img/comics/map-bg.png',
+			objects: [
+				{
+					img: '/img/icon/ASSEMBLY_CONSTRUCTION.png',
+					message: {
+						text: 'Okay, next step... No rush...',
+						textPlacement: 'right',
+						order: 2
+					},
+					position: 'top-left'
+				},
+				{
+					img: '/img/comics/protege.png',
+					position: 'bottom-right',
+					message: {
+						text: 'That should be the place. I should go there!',
+						textPlacement: 'left',
+						order: 3
+					}
+				},
+			]
+		},
+		{
+			background: '/img/comics/bg-01.png',
+			objects: [
+				{
+					img: '/img/comics/mentor.png',
+					position: 'top-left',
+					message: {
+						text: 'Hi there! I\'m your mentor! I\'ll help you to grow and we\'ll do a lot of cool things together!',
+						textPlacement: 'right-start',
+						order: 4
+					}
+				},
+				{
+					img: '/img/comics/protege.png',
+					position: 'bottom-right',
+					message: {
+						text: 'Okay!',
+						textPlacement: 'left-end',
+						order: 5
+					}
+				},
+			]
+		},
+		{
+			background: '/img/comics/bg-01.png',
+			objects: [
+				{
+					img: '/img/comics/mentor.png',
+					position: 'top-left',
+					message: {
+						text: amount ? 'See you later and here is a small gift for you' : 'See you later',
+						order: 6
+					}
+				},
+				{
+					img: '/img/comics/protege.png',
+					position: 'center',
+					message: {
+						text: amount ? 'Great! Thanks!' : 'See you!',
+						order: 7,
+						textPlacement: 'left'
+					}
+				},
+			]
+		},
+	];
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<Comics delay={250} papers={papers} />
+```
+## Positions
 
-### `npm run build`
+Each paper has 9 slots. position property determines which slot will be taken by which object.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+top-left   | top    | top-right
+----------------------------------
+left       | center | right
+----------------------------------
+bottom-left| bottom | bottom-right
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Message placements
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+[MUI tooltips](https://mui.com/components/tooltips/#positioned-tooltips)
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# Development
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Local build
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+npm run build
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Local start
 
-## Learn More
+```
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Local npm pack
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+npm pack
+```
 
-### Code Splitting
+## Publish
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+npm login
+npm publish
+```
