@@ -6,32 +6,22 @@ function App() {
 		<>
 			<Comics papers={[
 				{
-					background: '',
+					background: '/img/comics/bg-01.png',
 					objects: [
 						{
-							type: 'mentor',
-							position: 'top-start',
-							message: {
-								text: 'Hi there! I\'m your mentor! I\'ll help you to grow and we\'ll do a lot of cool things here!',
-								textPlacement: 'right',
-								order: 1
-							},
-							action: 'look-bottom-right'
-						},
-						{
-							type: 'protege',
-							position: 'bottom-end',
+							img: '/img/comics/protege.png',
+							position: 'center',
 							message: { text: 'Oh, cool!', order: 2 },
 							action: 'look-top-left'
 						},
 					]
 				},
 				{
-					background: '',
+					background: '/img/comics/bg-01.png',
 					objects: [
 						{
-							type: 'mentor',
-							position: 'bottom-start',
+							img: '/img/comics/mentor.png',
+							position: 'bottom-left',
 							message: { 
 								text: 'Hi there! I\'m your mentor! I\'ll help you to grow and we\'ll do a lot of cool things here!', 
 								textPlacement: 'top',
@@ -40,8 +30,8 @@ function App() {
 							action: 'look-bottom-right'
 						},
 						{
-							type: 'protege',
-							position: 'top-end',
+							img: '/img/comics/protege.png',
+							position: 'top-right',
 							message: { 
 								text: 'Okay...', 
 								textPlacement: 'bottom',
@@ -52,10 +42,10 @@ function App() {
 					]
 				},
 				{
-					background: '',
+					background: '/img/comics/bg-01.png',
 					objects: [
 						{
-							type: 'mentor',
+							img: '/img/comics/mentor.png',
 							position: 'left',
 							message: {
 								text: 'Hi there! I\'m your mentor! I\'ll help you to grow and we\'ll do a lot of cool things here!',
@@ -65,8 +55,8 @@ function App() {
 							action: 'look-bottom-right'
 						},
 						{
-							type: 'protege',
-							position: 'bottom-end',
+							img: '/img/comics/protege.png',
+							position: 'bottom-right',
 							message: {
 								text: 'You are weird..',
 								textPlacement: 'left-end',
@@ -77,16 +67,16 @@ function App() {
 					]
 				},
 				{
-					background: '',
+					background: '/img/comics/bg-01.png',
 					objects: [
 						{
-							type: 'mentor',
-							position: 'top-start',
+							img: '/img/comics/mentor.png',
+							position: 'top-left',
 							message: { text: 'Hi there! I\'m your mentor! I\'ll help you to grow and we\'ll do a lot of cool things here!', order: 7 },
 							action: 'look-bottom-right'
 						},
 						{
-							type: 'protege',
+							img: '/img/comics/protege.png',
 							position: 'center',
 							message: { 
 									text: 'Take the cookie!', 
