@@ -4,7 +4,7 @@ import Comics from './lib';
 function App() {
 	return (
 		<>
-			<Comics papers={[
+			<Comics tooltipZindex={1200} papers={[
 				{
 					background: '/img/comics/bg-01.png',
 					objects: [

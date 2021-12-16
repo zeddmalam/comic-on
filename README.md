@@ -3,7 +3,7 @@
 # Installation
 
 ```
-npm i comics-on --save
+npm i @zeddmalam.com/comics-on --save
 ```
 
 # Usage
@@ -140,5 +140,5 @@ npm pack
 
 ```
 npm login
-npm publish
+npm publish --access public
 ```

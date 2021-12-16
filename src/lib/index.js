@@ -22,7 +22,7 @@ const LightTooltip = styled(({ className, ...props }) => (
 	},
 	[`& .${tooltipClasses.arrow}`]: {
 		color: 'rgba(0, 0, 0, 0.87)'
-	},
+	}
 }));
 
 const pos2placement = {
@@ -37,13 +37,16 @@ const pos2placement = {
 	'bottom-right': 'left-start',
 };
 
-function Item({ paper, position, visibleMessages }) {
+function Item({ paper, position, visibleMessages, tooltipZindex }) {
 	return (<>
 		{paper.objects.filter(o => o.position === position).map((o, oIndex) => o.message ? (<LightTooltip
-				title={(<Badge badgeContent={o.message.order || 0} color="primary"><br />{o.message.text}</Badge>)}
+				title={(<Badge badgeContent={o.message.order || 0} color="primary">{o.message.text}</Badge>)}
 				arrow={!!o.img}
 				open={visibleMessages >= (o.message.order || 0)}
 				placement={o.message.textPlacement || pos2placement[position]}
+				PopperProps={{
+					style:{zIndex:tooltipZindex}
+				}}
 				key={`object-${oIndex}`}>
 				{o.img ? (<img height={128} src={o.img} alt="" />) : <span>&nbsp;</span>}
 			</LightTooltip>) : (<img height={128} src={o.img} alt="" key={`object-${oIndex}`}/>)
@@ -51,7 +54,7 @@ function Item({ paper, position, visibleMessages }) {
 	</>);
 }
 
-export default function Comics({ papers, delay = 500 }) {
+export default function Comics({ papers, delay = 500, tooltipZindex=1500 }) {
 	const [visibleMessages, setVisibleMessages] = useState(0);
 
 	useEffect(() => {
@@ -65,7 +68,7 @@ export default function Comics({ papers, delay = 500 }) {
 		return () => clearInterval(interval);
 	}, [visibleMessages, papers, delay]);
 
-	return (<Grid container spacing={2} style={{ backgroundColor: '#ffffff', padding:'16px' }}>
+	return (<Grid container spacing={2} style={{ backgroundColor: '#ffffff' }}>
 		{papers.map((paper, index) => {
 			const leftWidth = '128px';//paper.objects.filter(o => ['top-left', 'left', 'bottom-left'].includes(o.position)).length ? '128px' : null;
 			const centerWidth = paper.objects.filter(o => ['top', 'center', 'bottom'].includes(o.position)).length ? '128px' : null;
@@ -74,7 +77,7 @@ export default function Comics({ papers, delay = 500 }) {
 			const topHeight = '128px';//paper.objects.filter(o => ['top-left', 'top', 'top-right'].includes(o.position)).length ? '128px' : null;
 			const centerHeight = paper.objects.filter(o => ['left', 'center', 'right'].includes(o.position)).length ? '128px' : null;
 			const bottomHeight = paper.objects.filter(o => ['bottom-left', 'bottom', 'bottom-right'].includes(o.position)).length ? '128px' : null;
-			return (<Grid item xs={12} md={6} key={`card-${index}`}><Card component={Paper} elevation={8} style={{
+			return (<Grid item xs={12} md={papers.length === 1 ? 12 : 6} key={`card-${index}`}><Card component={Paper} elevation={8} style={{
 				backgroundSize: 'cover',
 				backgroundImage: `url(${paper.background})`,
 				backgroundRepeat: 'no-repeat',
@@ -95,19 +98,19 @@ export default function Comics({ papers, delay = 500 }) {
 					<table style={{ minWidth: '100%' }}>
 						<tbody>
 							<tr>
-								<td style={{ textAlign: 'left', verticalAlign:'center',   width: leftWidth,   height: topHeight}}><Item paper={paper} visibleMessages={visibleMessages} position="top-left" /></td>
-								<td style={{ textAlign: 'center', verticalAlign:'center', width: centerWidth, height: topHeight}}><Item paper={paper} visibleMessages={visibleMessages} position="top" /></td>
-								<td style={{ textAlign: 'right', verticalAlign:'center',  width: rightWidth,  height: topHeight}}><Item paper={paper} visibleMessages={visibleMessages} position="top-right" /></td>
+								<td style={{ textAlign: 'left', verticalAlign:'center',   width: leftWidth,   height: topHeight}}><Item paper={paper} visibleMessages={visibleMessages} position="top-left" tooltipZindex={tooltipZindex}/></td>
+								<td style={{ textAlign: 'center', verticalAlign:'center', width: centerWidth, height: topHeight}}><Item paper={paper} visibleMessages={visibleMessages} position="top" tooltipZindex={tooltipZindex}/></td>
+								<td style={{ textAlign: 'right', verticalAlign:'center',  width: rightWidth,  height: topHeight}}><Item paper={paper} visibleMessages={visibleMessages} position="top-right" tooltipZindex={tooltipZindex}/></td>
 							</tr>
 							<tr>
-								<td style={{ textAlign: 'left', verticalAlign:'center',   width: leftWidth,   height: centerHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="left" /></td>
-								<td style={{ textAlign: 'center', verticalAlign:'center', width: centerWidth, height: centerHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="center" /></td>
-								<td style={{ textAlign: 'right', verticalAlign:'center',  width: rightWidth,  height: centerHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="right" /></td>
+								<td style={{ textAlign: 'left', verticalAlign:'center',   width: leftWidth,   height: centerHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="left" tooltipZindex={tooltipZindex}/></td>
+								<td style={{ textAlign: 'center', verticalAlign:'center', width: centerWidth, height: centerHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="center" tooltipZindex={tooltipZindex}/></td>
+								<td style={{ textAlign: 'right', verticalAlign:'center',  width: rightWidth,  height: centerHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="right" tooltipZindex={tooltipZindex}/></td>
 							</tr>
 							<tr>
-								<td style={{ textAlign: 'left', verticalAlign:'center',   width: leftWidth,   height: bottomHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="bottom-left" /></td>
-								<td style={{ textAlign: 'center', verticalAlign:'center', width: centerWidth, height: bottomHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="bottom" /></td>
-								<td style={{ textAlign: 'right', verticalAlign:'center',  width: rightWidth,  height: bottomHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="bottom-right" /></td>
+								<td style={{ textAlign: 'left', verticalAlign:'center',   width: leftWidth,   height: bottomHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="bottom-left" tooltipZindex={tooltipZindex}/></td>
+								<td style={{ textAlign: 'center', verticalAlign:'center', width: centerWidth, height: bottomHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="bottom" tooltipZindex={tooltipZindex}/></td>
+								<td style={{ textAlign: 'right', verticalAlign:'center',  width: rightWidth,  height: bottomHeight }}><Item paper={paper} visibleMessages={visibleMessages} position="bottom-right" tooltipZindex={tooltipZindex}/></td>
 							</tr>
 						</tbody>
 					</table>
